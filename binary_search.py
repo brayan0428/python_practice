@@ -4,11 +4,11 @@ def f_binary_search(numbers,number_to_find,low,high):
   
   mid = int((low + high) / 2)
   if numbers[mid] == number_to_find:
-        return True
+    return True
   elif numbers[mid] > number_to_find:
-        f_binary_search(numbers,number_to_find,0, mid - 1)
+    f_binary_search(numbers,number_to_find,0, mid - 1)
   else:
-        f_binary_search(numbers,number_to_find,mid + 1, high)
+    f_binary_search(numbers,number_to_find,mid + 1, high)
 
 if __name__ == '__main__':
   numbers = [1,3,4,5,6,7,8,9,10,15,23,45,67]
