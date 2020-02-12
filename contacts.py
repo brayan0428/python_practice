@@ -1,5 +1,8 @@
+import csv
+
+
 class Contact:
-    
+
     def __init__(self, name, phone, email):
         self.name = name
         self.phone = phone
@@ -14,6 +17,7 @@ class ContactBook:
     def add(self, name, phone, email):
         contact = Contact(name, phone, email)
         self._contacts.append(contact)
+        self._save()
 
     def show_all(self):
         for contact in self._contacts:
@@ -23,6 +27,7 @@ class ContactBook:
         for idx, contact in enumerate(self._contacts):
             if contact.name.lower() == name.lower():
                 del self._contacts[idx]
+                self._save()
                 break
 
     def search(self, name):
@@ -33,14 +38,13 @@ class ContactBook:
         else:
             self._not_found()
 
-    def update(self, name, phone, email):
-        for contact in self._contacts:
-            if contact.name.lower() == name.lower():
-                contact.phone = phone
-                contact.email = email
-                break
-        else:
-            self._not_found()
+    def _save(self):
+        with open('contacts.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow( ('name', 'phone', 'email') )
+
+            for contact in self._contacts:
+                writer.writerow( (contact.name, contact.phone, contact.email) )
 
     def _print_contact(self, contact):
         print('--- * --- * --- * --- * --- * --- * --- * ---')
@@ -58,6 +62,15 @@ class ContactBook:
 def run():
 
     contact_book = ContactBook()
+
+    with open('contacts.csv', 'r') as f:
+        reader = csv.reader(f)
+        for idx, row in enumerate(reader):
+            print(row)
+            if idx == 0:
+                continue
+
+            contact_book.add(row[0], row[1], row[2])
 
     while True:
         command = str(input('''
@@ -79,11 +92,7 @@ def run():
             contact_book.add(name, phone, email)
 
         elif command == 'ac':
-            name = str(input('Escribe el nombre del contacto: '))
-            phone = str(input('Escribe el teléfono del contacto: '))
-            email = str(input('Escribe el email del contacto: '))
-
-            contact_book.update(name, phone, email)
+            print('actualizar contacto')
 
         elif command == 'b':
 
